@@ -73,7 +73,11 @@ function App() {
         <header className="header-box">
           <div>
             <p className="top-label">Щоденний контроль</p>
+<<<<<<< HEAD
             <h1>Medication Manager System</h1>
+=======
+            <h1>Medication Tracker</h1>
+>>>>>>> feature/title-version-2
             <p className="header-text">
               Додавай ліки, відмічай прийом та слідкуй за виконанням денної норми.
             </p>
