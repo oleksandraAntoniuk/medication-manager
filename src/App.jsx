@@ -5,6 +5,8 @@ function App() {
   const [medicineName, setMedicineName] = useState("");
   const [dailyGoal, setDailyGoal] = useState("");
 
+  const appStatus = import.meta.env.VITE_APP_STATUS;
+
   const [medicines, setMedicines] = useState([
     { id: 1, name: "Vitamin D", goal: 3, taken: 1 },
     { id: 2, name: "Omega-3", goal: 2, taken: 0 },
@@ -74,6 +76,7 @@ function App() {
           <div>
             <p className="top-label">Щоденний контроль</p>
             <h1>Medication Manager</h1>
+            <p>{appStatus}</p>
             <p className="header-text">
               Додавай ліки, відмічай прийом та слідкуй за виконанням денної норми.
             </p>
