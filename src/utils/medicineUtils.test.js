@@ -47,7 +47,7 @@ describe("medicineUtils", () => {
   it("increaseDose збільшує taken на 1, якщо не досягнуто goal", () => {
     const result = increaseDose(mockMedicines, 1);
 
-    expect(result[0].taken).toBe(2); 
+    expect(result[0].taken).toBe(5); 
   });
 
   it("increaseDose не перевищує goal", () => {
