@@ -1,3 +1,5 @@
+[![CI/CD Pipeline](https://github.com/oleksandraAntoniuk/medication-manager/actions/workflows/main.yml/badge.svg)](https://github.com/oleksandraAntoniuk/medication-manager/actions/workflows/main.yml)
+
 # Medication Manager
 
 Вебдодаток на React для обліку та контролю прийому лікарських засобів.
