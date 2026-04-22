@@ -4,6 +4,20 @@
 
 Вебдодаток на React для обліку та контролю прийому лікарських засобів.
 
+---
+
+## 🚀 Live Demo & Results
+
+- **Production Deployment:** [Live App on Vercel](https://medication-manager.vercel.app/)
+- **Репозиторій:** [GitHub Source Code](https://github.com/oleksandraAntoniuk/medication-manager)
+
+---
+
+Цей проєкт має повністю автоматизований CI/CD pipeline. 
+Кожен push у гілку main автоматично проходить перевірку (lint), тестування та збірку проєкту, а також деплоїться на платформу Vercel.
+
+---
+
 ## Опис
 Додаток дозволяє:
 - додавати препарати;
