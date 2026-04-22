@@ -1,0 +1,46 @@
+# Назва пайплайну
+name: CI/CD Pipeline
+# Події, при яких запускається workflow
+on:
+  # Запуск при пуші в основні гілки
+  push:
+    branches:
+      - main
+      - develop
+  # Запуск при створенні Pull Request
+  pull_request:
+    branches:
+      - main
+      - develop
+# Опис завдань (jobs), які виконуються в пайплайні
+jobs:
+  build-and-test:
+    # Вказуємо середовище виконання
+    runs-on: ubuntu-latest
+    # Послідовність кроків (steps)
+    steps:
+      # Отримання коду з репозиторію
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Встановлення Node.js потрібної версії
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # Встановлення залежностей проєкту
+      - name: Install dependencies
+        run: npm ci
+
+      # Перевірка коду за допомогою лінтера
+      - name: Run linter
+        run: npm run lint
+
+      # Запуск модульних тестів
+      - name: Run unit tests
+        run: npm run test:unit
+
+      # Збірка проєкту
+      - name: Build project
+        run: npm run build
