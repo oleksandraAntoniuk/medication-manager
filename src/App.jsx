@@ -1,9 +1,12 @@
 import { useState } from "react";
 import "./App.css";
+import posthog from 'posthog-js'
 
 function App() {
   const [medicineName, setMedicineName] = useState("");
   const [dailyGoal, setDailyGoal] = useState("");
+
+  const appStatus = import.meta.env.VITE_APP_STATUS;
 
   const [medicines, setMedicines] = useState([
     { id: 1, name: "Vitamin D", goal: 3, taken: 1 },
@@ -27,9 +30,18 @@ function App() {
     setMedicines([newMedicine, ...medicines]);
     setMedicineName("");
     setDailyGoal("");
+
+  posthog.capture('medicine_added', {
+    name: medicineName,
+    dose: goalNumber,
+    category: 'medicine'
+  });
+
   };
 
   const increaseDose = (id) => {
+    const selectedMedicine = medicines.find((item) => item.id === id);
+
     setMedicines(
       medicines.map((item) =>
         item.id === id && item.taken < item.goal
@@ -37,6 +49,16 @@ function App() {
           : item
       )
     );
+
+    // Подія: користувач прийняв препарат
+    if (selectedMedicine && selectedMedicine.taken < selectedMedicine.goal) {
+      posthog.capture('medicine_taken', {
+        name: selectedMedicine.name,
+        taken_before: selectedMedicine.taken,
+        taken_after: selectedMedicine.taken + 1,
+        goal: selectedMedicine.goal
+      });
+    }
   };
 
   const decreaseDose = (id) => {
@@ -50,7 +72,17 @@ function App() {
   };
 
   const deleteMedicine = (id) => {
+    const selectedMedicine = medicines.find((item) => item.id === id);
+
     setMedicines(medicines.filter((item) => item.id !== id));
+
+    // Подія: користувач видалив препарат
+    if (selectedMedicine) {
+      posthog.capture('medicine_deleted', {
+        name: selectedMedicine.name,
+        reason: 'user_deleted'
+      });
+    }
   };
 
   const resetAll = () => {
@@ -74,6 +106,7 @@ function App() {
           <div>
             <p className="top-label">Щоденний контроль</p>
             <h1>Medication Manager</h1>
+            <p>{appStatus}</p>
             <p className="header-text">
               Додавай ліки, відмічай прийом та слідкуй за виконанням денної норми.
             </p>
