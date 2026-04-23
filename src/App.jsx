@@ -9,7 +9,7 @@ function App() {
 
   const showReset = useFeatureFlag('show-reset-button');
 
-  const appStatus = import.meta.env.VITE_APP_STATUS;
+  // const appStatus = import.meta.env.VITE_APP_STATUS;
 
   const [medicines, setMedicines] = useState([
     { id: 1, name: "Vitamin D", goal: 3, taken: 1 },
