@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "./App.css";
+import posthog from 'posthog-js'
 
 function App() {
   const [medicineName, setMedicineName] = useState("");
@@ -29,9 +30,18 @@ function App() {
     setMedicines([newMedicine, ...medicines]);
     setMedicineName("");
     setDailyGoal("");
+
+  posthog.capture('medicine_added', {
+    name: medicineName,
+    dose: goalNumber,
+    category: 'medicine'
+  });
+
   };
 
   const increaseDose = (id) => {
+    const selectedMedicine = medicines.find((item) => item.id === id);
+
     setMedicines(
       medicines.map((item) =>
         item.id === id && item.taken < item.goal
@@ -39,6 +49,16 @@ function App() {
           : item
       )
     );
+
+    // Подія: користувач прийняв препарат
+    if (selectedMedicine && selectedMedicine.taken < selectedMedicine.goal) {
+      posthog.capture('medicine_taken', {
+        name: selectedMedicine.name,
+        taken_before: selectedMedicine.taken,
+        taken_after: selectedMedicine.taken + 1,
+        goal: selectedMedicine.goal
+      });
+    }
   };
 
   const decreaseDose = (id) => {
@@ -52,7 +72,17 @@ function App() {
   };
 
   const deleteMedicine = (id) => {
+    const selectedMedicine = medicines.find((item) => item.id === id);
+
     setMedicines(medicines.filter((item) => item.id !== id));
+
+    // Подія: користувач видалив препарат
+    if (selectedMedicine) {
+      posthog.capture('medicine_deleted', {
+        name: selectedMedicine.name,
+        reason: 'user_deleted'
+      });
+    }
   };
 
   const resetAll = () => {
