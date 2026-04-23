@@ -1,15 +1,20 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
-import posthog from 'posthog-js'
-import { useFeatureFlag } from 'posthog-js/react';
+import posthog from "posthog-js";
 
 function App() {
   const [medicineName, setMedicineName] = useState("");
   const [dailyGoal, setDailyGoal] = useState("");
+  const [showResetButton, setShowResetButton] = useState(false);
 
-  const showReset = useFeatureFlag('show-reset-button');
+  const appStatus = import.meta.env.VITE_APP_STATUS;
 
-  // const appStatus = import.meta.env.VITE_APP_STATUS;
+  useEffect(() => {
+    posthog.onFeatureFlags(() => {
+      const isEnabled = posthog.isFeatureEnabled("show-reset-button");
+      setShowResetButton(!!isEnabled);
+    });
+  }, []);
 
   const [medicines, setMedicines] = useState([
     { id: 1, name: "Vitamin D", goal: 3, taken: 1 },
@@ -34,12 +39,11 @@ function App() {
     setMedicineName("");
     setDailyGoal("");
 
-  posthog.capture('medicine_added', {
-    name: medicineName,
-    dose: goalNumber,
-    category: 'medicine'
-  });
-
+    posthog.capture("medicine_added", {
+      name: medicineName,
+      dose: goalNumber,
+      category: "medicine",
+    });
   };
 
   const increaseDose = (id) => {
@@ -53,13 +57,12 @@ function App() {
       )
     );
 
-    // Подія: користувач прийняв препарат
     if (selectedMedicine && selectedMedicine.taken < selectedMedicine.goal) {
-      posthog.capture('medicine_taken', {
+      posthog.capture("medicine_taken", {
         name: selectedMedicine.name,
         taken_before: selectedMedicine.taken,
         taken_after: selectedMedicine.taken + 1,
-        goal: selectedMedicine.goal
+        goal: selectedMedicine.goal,
       });
     }
   };
@@ -79,11 +82,10 @@ function App() {
 
     setMedicines(medicines.filter((item) => item.id !== id));
 
-    // Подія: користувач видалив препарат
     if (selectedMedicine) {
-      posthog.capture('medicine_deleted', {
+      posthog.capture("medicine_deleted", {
         name: selectedMedicine.name,
-        reason: 'user_deleted'
+        reason: "user_deleted",
       });
     }
   };
@@ -225,10 +227,11 @@ function App() {
             })
           )}
         </section>
-        {showReset && (
-        <button className="reset-btn" onClick={resetAll}>
-          Скинути прогрес за день
-        </button>
+
+        {showResetButton && (
+          <button className="reset-btn" onClick={resetAll}>
+            Скинути прогрес за день
+          </button>
         )}
       </div>
     </div>
