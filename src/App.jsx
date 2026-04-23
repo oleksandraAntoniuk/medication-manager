@@ -111,6 +111,7 @@ function App() {
           <div>
             <p className="top-label">Щоденний контроль</p>
             <h1>Medication Manager</h1>
+            <p>{appStatus}</p>
             <p className="header-text">
               Додавай ліки, відмічай прийом та слідкуй за виконанням денної норми.
             </p>
