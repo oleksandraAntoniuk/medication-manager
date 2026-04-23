@@ -1,10 +1,13 @@
 import { useState } from "react";
 import "./App.css";
 import posthog from 'posthog-js'
+import { useFeatureFlag } from 'posthog-js/react';
 
 function App() {
   const [medicineName, setMedicineName] = useState("");
   const [dailyGoal, setDailyGoal] = useState("");
+
+  const showReset = useFeatureFlag('show-reset-button');
 
   const appStatus = import.meta.env.VITE_APP_STATUS;
 
@@ -222,10 +225,11 @@ function App() {
             })
           )}
         </section>
-
+        {showReset && (
         <button className="reset-btn" onClick={resetAll}>
           Скинути прогрес за день
         </button>
+        )}
       </div>
     </div>
   );
