@@ -17,6 +17,8 @@
     "test": "npm run test:unit && npm run test:e2e"
   },
   "dependencies": {
+    "@sentry/react": "^10.50.0",
+    "@sentry/vue": "^10.50.0",
     "posthog-js": "^1.370.1",
     "react": "^19.2.4",
     "react-dom": "^19.2.4"

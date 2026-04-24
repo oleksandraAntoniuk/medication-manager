@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 import posthog from "posthog-js";
+import * as Sentry from "@sentry/react";
 
 function App() {
   const [medicineName, setMedicineName] = useState("");
@@ -8,6 +9,14 @@ function App() {
   const [showResetButton, setShowResetButton] = useState(false);
 
   const appStatus = import.meta.env.VITE_APP_STATUS;
+
+  useEffect(() => {
+  Sentry.setUser({
+    id: "12345",
+    email: "student@example.com",
+    segment: "premium_user",
+    });
+  }, []);
 
   useEffect(() => {
     posthog.onFeatureFlags(() => {
@@ -97,6 +106,10 @@ function App() {
         taken: 0,
       }))
     );
+  };
+
+  const throwError = () => {
+    throw new Error("Sentry Test Error: Something went wrong!");
   };
 
   const totalMedicines = medicines.length;
@@ -233,6 +246,15 @@ function App() {
             Скинути прогрес за день
           </button>
         )}
+
+        <button className="reset-btn" onClick={throwError}>
+          Break the world
+        </button>
+
+        <button onClick={() => Sentry.setUser(null)}>
+          Logout
+        </button>
+
       </div>
     </div>
   );
